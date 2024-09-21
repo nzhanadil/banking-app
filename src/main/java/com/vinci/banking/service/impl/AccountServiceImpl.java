@@ -2,6 +2,7 @@ package com.vinci.banking.service.impl;
 
 import com.vinci.banking.dto.AccountDto;
 import com.vinci.banking.entity.Account;
+import com.vinci.banking.exception.ApiRequestException;
 import com.vinci.banking.mapper.AccountMapper;
 import com.vinci.banking.repository.AccountRepository;
 import com.vinci.banking.service.AccountService;
@@ -34,7 +35,7 @@ public class AccountServiceImpl implements AccountService {
     public AccountDto getAccountById(Long id) {
         Account account = accountRepository
                 .findById(id)
-                .orElseThrow(() -> new RuntimeException("Account does not exists"));
+                .orElseThrow(() -> new ApiRequestException("Account does not exists"));
         return AccountMapper.mapToAccountDto(account);
     }
 
@@ -43,7 +44,7 @@ public class AccountServiceImpl implements AccountService {
 
         Account account = accountRepository
                 .findById(id)
-                .orElseThrow(() -> new RuntimeException("Account does not exists"));
+                .orElseThrow(() -> new ApiRequestException("Account does not exists"));
 
         double total = account.getBalance() + amount;
 
@@ -58,10 +59,10 @@ public class AccountServiceImpl implements AccountService {
 
         Account account = accountRepository
                 .findById(id)
-                .orElseThrow(() -> new RuntimeException("Account does not exists"));
+                .orElseThrow(() -> new ApiRequestException("Account does not exists"));
 
         if (account.getBalance() < amount) {
-            throw new RuntimeException("Insufficient amount");
+            throw new ApiRequestException("Insufficient amount");
         }
 
         double total = account.getBalance() - amount;
@@ -84,7 +85,7 @@ public class AccountServiceImpl implements AccountService {
     public void deleteAccount(Long id) {
         Account account = accountRepository
                 .findById(id)
-                .orElseThrow(() -> new RuntimeException("Account does not exists"));
+                .orElseThrow(() -> new ApiRequestException("Account does not exists"));
 
         accountRepository.deleteById(id);
     }
